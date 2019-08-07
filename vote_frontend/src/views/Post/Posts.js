@@ -3,6 +3,7 @@ import axios from "axios";
 import Cookies from "universal-cookie";
 import { Collapse, Button, CardBody, Card } from "reactstrap";
 import { Link, NavLink } from "react-router-dom";
+import Header from "../Common/Header";
 
 const host = "http://127.0.0.1:4000";
 const cookies = new Cookies();
@@ -34,36 +35,34 @@ class Posts extends Component {
   render() {
     return (
       <div className="container">
-        {cookies.get("username") ? (
-          <h1>hello {cookies.get("username")}</h1>
-        ) : (
-          ""
-        )}
-        {this.state.posts.map((post, index) => (
-          <div
-            className="row"
-            key={index}
-            style={{ borderBottom: "solid", borderColor: "#DCDCDC" }}
-          >
-            <div className="col-sm-6">
-              <div className="row">
-                <Link
-                  exact={true}
-                  to={{
-                    pathname: "/posts/" + post.id,
-                    state: {
-                      id: post.id
-                    }
-                  }}
-                  replace
-                  rel="noopener noreferrer"
-                >
-                  {post.title}
-                </Link>
+        <Header />
+        <div className="container">
+          {this.state.posts.map((post, index) => (
+            <div
+              className="row"
+              key={index}
+              style={{ borderBottom: "solid", borderColor: "#DCDCDC" }}
+            >
+              <div className="col-sm-6">
+                <div className="row">
+                  <Link
+                    exact={true}
+                    to={{
+                      pathname: "/posts/" + post.id,
+                      state: {
+                        id: post.id
+                      }
+                    }}
+                    replace
+                    rel="noopener noreferrer"
+                  >
+                    {post.title}
+                  </Link>
+                </div>
               </div>
             </div>
-          </div>
-        ))}
+          ))}
+        </div>
       </div>
     );
   }
