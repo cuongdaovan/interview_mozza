@@ -1,13 +1,15 @@
 import React from "react";
 import logo from "./logo.svg";
 
-import { Posts } from "./views";
+import { Login } from "./views";
+import { BrowserRouter as Router } from "react-router-dom";
+import Routers from "./Routers";
 
 function App() {
   return (
-    <div className="App">
-      <Posts />
-    </div>
+    <Router>
+      <Routers />
+    </Router>
   );
 }
 
