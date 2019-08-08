@@ -10,7 +10,8 @@ import {
   UncontrolledDropdown,
   DropdownToggle,
   DropdownMenu,
-  DropdownItem
+  DropdownItem,
+  Button
 } from "reactstrap";
 
 import Cookies from "universal-cookie";
@@ -24,7 +25,8 @@ export default class Example extends React.Component {
 
     this.toggle = this.toggle.bind(this);
     this.state = {
-      isOpen: false
+      isOpen: false,
+      username: username
     };
   }
   toggle() {
@@ -32,6 +34,17 @@ export default class Example extends React.Component {
       isOpen: !this.state.isOpen
     });
   }
+  componentDidMount() {
+    const username = cookies.get("username") ? cookies.get("username") : "";
+    this.setState({ username: username });
+  }
+  onLogout = () => {
+    cookies.remove("username", { path: "/" });
+    cookies.remove("access_token", { path: "/" });
+    cookies.remove("userId", { path: "/" });
+    cookies.remove("email", { path: "/" });
+    this.setState({ username: null });
+  };
   render() {
     return (
       <div>
@@ -43,18 +56,22 @@ export default class Example extends React.Component {
               <NavItem>
                 <NavLink href="/posts/">posts</NavLink>
               </NavItem>
-              {username ? (
+              {this.state.username ? (
                 <UncontrolledDropdown nav inNavbar>
                   <DropdownToggle nav caret>
-                    {username}
+                    {this.state.username}
                   </DropdownToggle>
                   <DropdownMenu right>
                     <DropdownItem>Profile</DropdownItem>
-                    <DropdownItem>Logout</DropdownItem>
+                    <DropdownItem>
+                      <Button onClick={this.onLogout}>Logout</Button>
+                    </DropdownItem>
                   </DropdownMenu>
                 </UncontrolledDropdown>
               ) : (
-                ""
+                <NavItem>
+                  <NavLink href="/login/">Login</NavLink>
+                </NavItem>
               )}
             </Nav>
           </Collapse>

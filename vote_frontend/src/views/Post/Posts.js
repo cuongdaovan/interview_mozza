@@ -5,7 +5,7 @@ import { Collapse, Button, CardBody, Card } from "reactstrap";
 import { Link, NavLink } from "react-router-dom";
 import Header from "../Common/Header";
 
-const host = "http://127.0.0.1:4000";
+const host = "https://voteinterview.herokuapp.com";
 const cookies = new Cookies();
 const user = { username: cookies.get("username"), email: cookies.get("email") };
 

@@ -22,7 +22,10 @@ class Popup extends React.Component {
     } else {
       return (
         <div>
-          <Button color={this.props.color} onClick={this.toggle}>
+          <Button
+            color={this.props.color}
+            onClick={this.toggle}
+          >
             {this.props.buttonLabel}
           </Button>
           <Modal
@@ -31,9 +34,7 @@ class Popup extends React.Component {
             className={this.props.className}
           >
             <ModalHeader toggle={this.toggle}>Stackoverflow</ModalHeader>
-            <ModalBody>
-              Login to vote
-            </ModalBody>
+            <ModalBody>Login to vote</ModalBody>
             <ModalFooter>
               <Button color="primary" onClick={this.toggle}>
                 Login

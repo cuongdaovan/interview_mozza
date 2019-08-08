@@ -1,11 +1,12 @@
 import React, { Component } from "react";
 import axios from "axios";
 import Cookies from "universal-cookie";
-import { Collapse, Button, CardBody, Card } from "reactstrap";
+import { Button, NavLink } from "reactstrap";
 import Header from "../Common/Header";
 import Popup from "../Common/Popup";
+import { Modal, ModalHeader, ModalBody, ModalFooter } from "reactstrap";
 
-const host = "http://127.0.0.1:4000";
+const host = "https://voteinterview.herokuapp.com";
 const cookies = new Cookies();
 const user = {
   username: cookies.get("username") ? cookies.get("username") : null,
@@ -21,7 +22,11 @@ class Post extends Component {
     super(props);
     this.state = {
       post: null,
-      voted: null
+      voted: "secondary",
+      modal: false,
+      user: user,
+      access_token: access_token,
+      permission: permission
     };
   }
   componentDidMount() {
@@ -34,7 +39,23 @@ class Post extends Component {
       .catch(err => {
         console.log(err);
       });
+    const userId = cookies.get("userId") ? cookies.get("userId") : null;
+    const access_token = cookies.get("access_token")
+      ? cookies.get("access_token")
+      : null;
+    const permission = access_token !== null ? true : false;
+    this.setState({
+      access_token: access_token,
+      userId: userId,
+      user: user,
+      permission: permission
+    });
   }
+  toggle = () => {
+    this.setState(prevState => ({
+      modal: !prevState.modal
+    }));
+  };
   voteUp = e => {
     const { id } = this.props.match.params;
     axios({
@@ -45,6 +66,7 @@ class Post extends Component {
         "Content-type": "application/json"
       }
     }).then(res => {
+      console.log(res.status);
       if (res.status === 201) {
         this.setState({ voted: "primary" });
         axios
@@ -69,19 +91,48 @@ class Post extends Component {
           <div className="col-sm-2">
             <div className="col">
               {this.state.post ? (
-                this.state.post.users.filter(u => u.email === user.email)
-                  .length > 0 ? (
-                  <Popup
-                    permission={permission}
-                    buttonLabel="&#8593;"
-                    color={this.state.voted || "primary"}
-                  />
+                this.state.post.users.filter(
+                  u => u.email === this.state.user.email
+                ).length > 0 ? (
+                  <div>
+                    <Button
+                      color="primary"
+                      onClick={() => {
+                        this.voteUp();
+                      }}
+                    >
+                      &#8593;
+                    </Button>
+                  </div>
                 ) : (
-                  <Popup
-                    permission={permission}
-                    buttonLabel="&#8593;"
-                    color={this.state.voted}
-                  />
+                  <div>
+                    <Button
+                      color={this.state.voted}
+                      onClick={() => {
+                        this.toggle();
+                        this.voteUp();
+                      }}
+                    >
+                      &#8593;
+                    </Button>
+                    {!this.state.permission ? (
+                      <Modal isOpen={this.state.modal} toggle={this.toggle}>
+                        <ModalHeader toggle={this.toggle}>
+                          Stackoverflow
+                        </ModalHeader>
+                        <ModalBody>Login to vote</ModalBody>
+                        <ModalFooter>
+                          <NavLink href="/login/">Login</NavLink>
+                          <Button color="primary" onClick={this.toggle}>
+                            Login
+                          </Button>{" "}
+                          <Button color="secondary" onClick={this.toggle}>
+                            Cancel
+                          </Button>
+                        </ModalFooter>
+                      </Modal>
+                    ) : null}
+                  </div>
                 )
               ) : (
                 ""

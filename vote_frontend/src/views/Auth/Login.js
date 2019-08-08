@@ -4,7 +4,7 @@ import axios from "axios";
 import { Redirect } from "react-router-dom";
 import Cookies from "universal-cookie";
 const cookies = new Cookies();
-const host = "http://127.0.0.1:4000";
+const host = "https://voteinterview.herokuapp.com";
 
 class Login extends Component {
   constructor(props) {
